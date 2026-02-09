@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍕 Where to Eat? Shell Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Makan mana?</title>
     <style>
         * {
             margin: 0;
@@ -11,14 +11,27 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #008282;
             min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin: 0;
         }
 
         .container {
@@ -27,6 +40,7 @@
             border-radius: 0;
             padding: 0;
             width: 300px;
+            max-width: calc(100vw - 40px);
             height: 400px;
             box-shadow: 
                 inset -1px -1px 0 0 #000000,
@@ -312,19 +326,19 @@
 
         .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #f0f;
-            animation: confetti-fall 3s linear forwards;
+            width: 8px;
+            height: 8px;
+            will-change: transform, opacity;
+            animation: confetti-fall 2.5s linear forwards;
         }
 
         @keyframes confetti-fall {
             0% {
-                transform: translateY(0) rotateZ(0deg);
+                transform: translate3d(0, 0, 0) rotateZ(0deg);
                 opacity: 1;
             }
             100% {
-                transform: translateY(400px) rotateZ(720deg);
+                transform: translate3d(0, 350px, 0) rotateZ(720deg);
                 opacity: 0;
             }
         }
@@ -451,24 +465,6 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                width: 90vw;
-                height: auto;
-                min-height: 400px;
-            }
-
-            .window-content {
-                padding: 12px;
-            }
-
-            .inputs-grid {
-                max-width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
             .cups-container-2d {
                 gap: 12px;
             }
@@ -890,26 +886,25 @@
 
         function showConfetti() {
             const confettiContainer = document.getElementById('confettiContainer');
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff1493', '#7fff00', '#ff6347'];
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff1493'];
             
             // Clear any existing confetti
             confettiContainer.innerHTML = '';
             
-            // Create 50 confetti pieces
-            for (let i = 0; i < 50; i++) {
+            // Create 25 confetti pieces (reduced from 50 for better performance)
+            for (let i = 0; i < 25; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + '%';
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
                 confettiContainer.appendChild(confetti);
             }
             
             // Clean up after animation
             setTimeout(() => {
                 confettiContainer.innerHTML = '';
-            }, 4000);
+            }, 3000);
         }
 
         // Utility functions
