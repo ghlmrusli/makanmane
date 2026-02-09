@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍕 Where to Eat? Shell Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #008282;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            width: 300px;
+            height: 400px;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #dfdfdf,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #ffffff,
+                2px 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Window Title Bar */
+        .title-bar {
+            background: linear-gradient(to right, #0054e3 0%, #1084d0 100%);
+            color: white;
+            padding: 3px 5px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 26px;
+        }
+
+        .title-bar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .close-btn {
+            width: 20px;
+            height: 20px;
+            background: #d4d0c8;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #ffffff,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #dfdfdf;
+        }
+
+        .close-btn:hover {
+            background: #c00000;
+            color: white;
+        }
+
+        .close-btn:active {
+            box-shadow: 
+                inset 1px 1px 0 0 #000000,
+                inset -1px -1px 0 0 #ffffff,
+                inset 2px 2px 0 0 #808080,
+                inset -2px -2px 0 0 #dfdfdf;
+        }
+
+        /* Content Area */
+        .window-content {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            text-align: center;
+            color: #000;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Input Phase */
+        .input-phase {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .input-phase.active {
+            display: flex;
+        }
+
+        .inputs-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+            max-width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 4px;
+            color: #000;
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .input-group input {
+            padding: 3px 4px;
+            border: none;
+            font-size: 12px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 24px;
+            box-shadow: 
+                inset 1px 1px 0 0 #808080,
+                inset -1px -1px 0 0 #ffffff,
+                inset 2px 2px 0 0 #000000,
+                inset -2px -2px 0 0 #dfdfdf;
+        }
+
+        .input-group input::placeholder {
+            opacity: 0.5;
+            color: #6d6d6d;
+        }
+
+        .input-group input:focus {
+            outline: none;
+        }
+
+        .btn {
+            padding: 3px 12px;
+            min-width: 75px;
+            height: 30px;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            background: #d4d0c8;
+            color: #000;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #ffffff,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #dfdfdf;
+            position: relative;
+            text-align: center;
+            line-height: 24px;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            background: #d4d0c8;
+            color: #000;
+            border: 1px solid #000;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #ffffff,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #dfdfdf;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #d4d0c8;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            box-shadow: 
+                inset 1px 1px 0 0 #000000,
+                inset -1px -1px 0 0 #ffffff,
+                inset 2px 2px 0 0 #808080,
+                inset -2px -2px 0 0 #dfdfdf;
+            padding: 4px 11px 2px 13px;
+        }
+
+        .btn:disabled {
+            color: #808080;
+            cursor: not-allowed;
+            text-shadow: 1px 1px 0 #ffffff;
+        }
+
+        .btn:focus {
+            outline: 1px dotted #000000;
+            outline-offset: -4px;
+        }
+
+        /* Game Phase */
+        .game-phase {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .game-phase.active {
+            display: flex;
+        }
+
+        /* 2D Cup Styles */
+        .cups-container-2d {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 12px 0;
+            perspective: 1000px;
+        }
+
+        .cup-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cup-wrapper:hover:not(.disabled) {
+            transform: translateY(-8px);
+        }
+
+        .cup-wrapper.disabled {
+            cursor: not-allowed;
+        }
+
+        .cup-2d {
+            width: 60px;
+            height: 45px;
+            position: relative;
+        }
+
+        .cup-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+        }
+
+        .cup-wrapper.revealed .cup-2d {
+            transform: translateY(-25px);
+            transition: transform 0.5s ease-out;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            justify-content: center;
+            margin-top: auto;
+            padding-top: 12px;
+            flex-shrink: 0;
+        }
+
+        .input-content {
+            flex: 0 0 auto;
+        }
+
+        .game-content {
+            flex: 0 0 auto;
+        }
+
+        .button-spacer {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        /* Confetti Animation */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+
+        .status {
+            text-align: center;
+            margin: 8px 0 30px 0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #000;
+            min-height: 16px;
+        }
+
+        .reveal-message {
+            display: none;
+        }
+
+        .error-message {
+            color: #c00000;
+            text-align: center;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        /* Modal Popup */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: #f0f0f0;
+            width: 280px;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #dfdfdf,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #ffffff,
+                2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .modal-title-bar {
+            background: linear-gradient(to right, #0054e3 0%, #1084d0 100%);
+            color: white;
+            padding: 3px 5px;
+            font-size: 12px;
+            font-weight: 600;
+            height: 26px;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-content {
+            padding: 16px;
+            font-size: 12px;
+            color: #000;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            padding: 0 16px 16px 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-btn {
+            min-width: 75px;
+            height: 30px;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: none;
+            cursor: pointer;
+            background: #d4d0c8;
+            color: #000;
+            box-shadow: 
+                inset -1px -1px 0 0 #000000,
+                inset 1px 1px 0 0 #ffffff,
+                inset -2px -2px 0 0 #808080,
+                inset 2px 2px 0 0 #dfdfdf;
+            text-align: center;
+            line-height: 24px;
+        }
+
+        .modal-btn:active {
+            box-shadow: 
+                inset 1px 1px 0 0 #000000,
+                inset -1px -1px 0 0 #ffffff,
+                inset 2px 2px 0 0 #808080,
+                inset -2px -2px 0 0 #dfdfdf;
+            padding: 1px 0 0 2px;
+        }
+
+        /* Static cups display on input screen */
+        .static-cups {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 16px 0 20px 0;
+        }
+
+        .static-cup {
+            width: 60px;
+            height: 45px;
+        }
+
+        .static-cup svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90vw;
+                height: auto;
+                min-height: 400px;
+            }
+
+            .window-content {
+                padding: 12px;
+            }
+
+            .inputs-grid {
+                max-width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .cups-container-2d {
+                gap: 12px;
+            }
+
+            .cup-2d {
+                width: 50px;
+                height: 38px;
+            }
+
+            .static-cup {
+                width: 50px;
+                height: 38px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-bar">
+            <div class="title-bar-left">Makan mana?</div>
+            <button class="close-btn" id="closeBtn">✕</button>
+        </div>
+        <div class="window-content">
+            <div class="confetti-container" id="confettiContainer"></div>
+            <!-- Input Phase -->
+            <div class="input-phase active" id="inputPhase">
+                <div class="input-content">
+                    <!-- Static Cups Display -->
+                    <div class="static-cups">
+                        <div class="static-cup">
+                            <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="cupGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#ff3b3b;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#d61f3d;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#ff5757;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <!-- Cup body (flipped upside down, 3 ridges tall, no rim) -->
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient)" stroke="none"/>
+                                <!-- 3 Horizontal ridges -->
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                        <div class="static-cup">
+                            <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient)" stroke="none"/>
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                        <div class="static-cup">
+                            <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient)" stroke="none"/>
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="inputs-grid">
+                    <div class="input-group">
+                        <label for="place1">Cadangan 1</label>
+                        <input type="text" id="place1" placeholder="Pizza Palace" maxlength="30">
+                    </div>
+                    <div class="input-group">
+                        <label for="place2">Cadangan 2</label>
+                        <input type="text" id="place2" placeholder="Taco Town" maxlength="30">
+                    </div>
+                    <div class="input-group">
+                        <label for="place3">Cadangan 3</label>
+                        <input type="text" id="place3" placeholder="Ramen House" maxlength="30">
+                    </div>
+                </div>
+                <p class="error-message" id="inputError"></p>
+                </div>
+                <div class="button-spacer"></div>
+                <button class="btn btn-primary" id="startGameBtn">Shuffle</button>
+            </div>
+
+        <!-- Game Phase -->
+        <div class="game-phase" id="gamePhase">
+            <div class="game-content">
+                <div class="status" id="statusText"></div>
+                
+                <!-- 2D Cups -->
+                <div class="cups-container-2d" id="cupsContainer2d">
+                    <div class="cup-wrapper" data-index="0">
+                        <div class="cup-2d">
+                            <svg class="cup-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="cupGradient2d" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#ff3b3b;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#d61f3d;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#ff5757;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient2d)" stroke="none"/>
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper" data-index="1">
+                        <div class="cup-2d">
+                            <svg class="cup-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient2d)" stroke="none"/>
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper" data-index="2">
+                        <div class="cup-2d">
+                            <svg class="cup-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 30 75 L 37 15 Q 37 8 42 5 L 58 5 Q 63 8 63 15 L 70 75 Z" 
+                                      fill="url(#cupGradient2d)" stroke="none"/>
+                                <rect x="30" y="60" width="40" height="2" fill="#ff5757" opacity="0.4"/>
+                                <rect x="32" y="42" width="36" height="2" fill="#d61f3d" opacity="0.4"/>
+                                <rect x="34" y="24" width="32" height="2" fill="#ff5757" opacity="0.4"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-message" id="revealMessage"></div>
+            </div>
+            
+            <div class="button-spacer"></div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" id="shuffleAgainBtn" style="display: none;">Shuffle lagi skali</button>
+                <button class="btn btn-primary" id="resetBtn" style="display: none;">Tukar cadangan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-dialog">
+            <div class="modal-title-bar">Makan mana?</div>
+            <div class="modal-content">Betul taknak makan?</div>
+            <div class="modal-buttons">
+                <button class="modal-btn" id="cancelBtn">Tak betul</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        // Game State
+        let places = ['', '', ''];
+        let cupPositions = [0, 1, 2]; // Tracks which place is under which cup
+        let isShuffling = false;
+        let isRevealed = false;
+
+        // DOM Elements
+        const inputPhase = document.getElementById('inputPhase');
+        const gamePhase = document.getElementById('gamePhase');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const shuffleAgainBtn = document.getElementById('shuffleAgainBtn');
+        const statusText = document.getElementById('statusText');
+        const revealMessage = document.getElementById('revealMessage');
+        const inputError = document.getElementById('inputError');
+        const cupsContainer2d = document.getElementById('cupsContainer2d');
+        const closeBtn = document.getElementById('closeBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Initialize
+        startGameBtn.addEventListener('click', startGame);
+        resetBtn.addEventListener('click', resetGame);
+        shuffleAgainBtn.addEventListener('click', shuffleAgain);
+        closeBtn.addEventListener('click', showCloseModal);
+        cancelBtn.addEventListener('click', hideCloseModal);
+
+        function showCloseModal() {
+            modalOverlay.classList.add('active');
+        }
+
+        function hideCloseModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        function startGame() {
+            // Get input values
+            places[0] = document.getElementById('place1').value.trim();
+            places[1] = document.getElementById('place2').value.trim();
+            places[2] = document.getElementById('place3').value.trim();
+
+            // Validate inputs
+            if (!places[0] || !places[1] || !places[2]) {
+                inputError.textContent = 'Please fill in all three places!';
+                return;
+            }
+
+            inputError.textContent = '';
+            inputPhase.classList.remove('active');
+            gamePhase.classList.add('active');
+
+            // Show buttons immediately (disabled)
+            shuffleAgainBtn.style.display = 'inline-block';
+            resetBtn.style.display = 'inline-block';
+            shuffleAgainBtn.disabled = true;
+            resetBtn.disabled = true;
+
+            // Initialize 2D game
+            init2DGame();
+            
+            // Automatically start shuffling
+            setTimeout(() => {
+                shuffleCups();
+            }, 500);
+        }
+
+        function init2DGame() {
+            const cupWrappers = document.querySelectorAll('.cup-wrapper');
+            cupWrappers.forEach((wrapper, index) => {
+                // Remove any existing click listeners
+                const newWrapper = wrapper.cloneNode(true);
+                wrapper.parentNode.replaceChild(newWrapper, wrapper);
+            });
+            
+            // Re-query after replacing nodes
+            const newCupWrappers = document.querySelectorAll('.cup-wrapper');
+            newCupWrappers.forEach((wrapper) => {
+                wrapper.addEventListener('click', (e) => {
+                    if (isShuffling || isRevealed) return;
+                    
+                    // Get the actual current position of this wrapper in the DOM
+                    const allWrappers = Array.from(document.querySelectorAll('.cup-wrapper'));
+                    const clickedIndex = allWrappers.indexOf(wrapper);
+                    
+                    selectCup2D(wrapper, clickedIndex);
+                });
+            });
+        }
+
+        function shuffleCups() {
+            if (isShuffling || isRevealed) return;
+
+            isShuffling = true;
+            statusText.textContent = 'Shuffling...';
+            revealMessage.textContent = '';
+            
+            // Disable buttons during shuffle
+            shuffleAgainBtn.disabled = true;
+            resetBtn.disabled = true;
+
+            shuffle2D();
+        }
+
+        async function shuffle2D() {
+            const cupWrappers = document.querySelectorAll('.cup-wrapper');
+            cupWrappers.forEach(w => w.classList.add('disabled'));
+
+            // Perform exactly 3 random swaps
+            for (let i = 0; i < 3; i++) {
+                const idx1 = Math.floor(Math.random() * 3);
+                let idx2 = Math.floor(Math.random() * 3);
+                while (idx2 === idx1) {
+                    idx2 = Math.floor(Math.random() * 3);
+                }
+
+                await swapCups2D(idx1, idx2);
+                await sleep(300);
+            }
+
+            cupWrappers.forEach(w => w.classList.remove('disabled'));
+            isShuffling = false;
+            statusText.textContent = 'Pilih satu!';
+            
+            // Enable buttons after shuffle
+            shuffleAgainBtn.disabled = false;
+            resetBtn.disabled = false;
+        }
+
+        function swapCups2D(idx1, idx2) {
+            return new Promise(resolve => {
+                const cupWrappers = Array.from(document.querySelectorAll('.cup-wrapper'));
+                const cup1 = cupWrappers[idx1];
+                const cup2 = cupWrappers[idx2];
+
+                const rect1 = cup1.getBoundingClientRect();
+                const rect2 = cup2.getBoundingClientRect();
+                const deltaX = rect2.left - rect1.left;
+
+                cup1.style.transition = 'transform 0.8s ease-in-out';
+                cup2.style.transition = 'transform 0.8s ease-in-out';
+
+                cup1.style.transform = `translateX(${deltaX}px)`;
+                cup2.style.transform = `translateX(${-deltaX}px)`;
+
+                setTimeout(() => {
+                    cup1.style.transition = '';
+                    cup2.style.transition = '';
+                    cup1.style.transform = '';
+                    cup2.style.transform = '';
+
+                    // Swap in DOM
+                    const parent = cup1.parentNode;
+                    const next1 = cup1.nextSibling === cup2 ? cup1 : cup1.nextSibling;
+                    cup2.parentNode.insertBefore(cup1, cup2);
+                    parent.insertBefore(cup2, next1);
+
+                    // Update indices
+                    cup1.dataset.index = idx2;
+                    cup2.dataset.index = idx1;
+
+                    [cupPositions[idx1], cupPositions[idx2]] = [cupPositions[idx2], cupPositions[idx1]];
+                    resolve();
+                }, 800);
+            });
+        }
+
+        function selectCup2D(clickedWrapper, visualIndex) {
+            if (isShuffling || isRevealed) return;
+
+            isRevealed = true;
+            
+            // Disable all cups
+            const cupWrappers = document.querySelectorAll('.cup-wrapper');
+            cupWrappers.forEach(w => w.classList.add('disabled'));
+            
+            // Disable buttons during reveal
+            shuffleAgainBtn.disabled = true;
+            resetBtn.disabled = true;
+            
+            // Get the data-index which tells us which original position this cup represents
+            const originalIndex = parseInt(clickedWrapper.dataset.index);
+            
+            // Use cupPositions to find which place is under this cup
+            const placeIndex = cupPositions[originalIndex];
+            const selectedPlace = places[placeIndex];
+
+            // Reveal the exact cup that was clicked
+            clickedWrapper.classList.add('revealed');
+            
+            setTimeout(() => {
+                statusText.textContent = `Ayuh ke ${selectedPlace}!`;
+                shuffleAgainBtn.style.display = 'inline-block';
+                resetBtn.style.display = 'inline-block';
+                shuffleAgainBtn.disabled = false;
+                resetBtn.disabled = false;
+                showConfetti();
+            }, 800);
+        }
+
+        function shuffleAgain() {
+            // Reset revealed state but keep the same places
+            isRevealed = false;
+            
+            // Keep buttons visible but disabled
+            shuffleAgainBtn.disabled = true;
+            resetBtn.disabled = true;
+            statusText.textContent = '';
+            
+            // Reset all cups
+            const cupWrappers = document.querySelectorAll('.cup-wrapper');
+            cupWrappers.forEach((w, i) => {
+                w.classList.remove('revealed', 'disabled');
+            });
+            
+            // Reset positions
+            cupPositions = [0, 1, 2];
+            
+            // Reinitialize click handlers
+            init2DGame();
+            
+            // Start shuffling again
+            setTimeout(() => {
+                shuffleCups();
+            }, 500);
+        }
+
+        function resetGame() {
+            // Store current values before reset
+            const previousPlace1 = places[0];
+            const previousPlace2 = places[1];
+            const previousPlace3 = places[2];
+
+            // Reset state
+            cupPositions = [0, 1, 2];
+            isShuffling = false;
+            isRevealed = false;
+
+            // Reset UI
+            gamePhase.classList.remove('active');
+            inputPhase.classList.add('active');
+            resetBtn.style.display = 'none';
+            shuffleAgainBtn.style.display = 'none';
+            revealMessage.textContent = '';
+            statusText.textContent = '';
+
+            // Reset 2D cups
+            const cupWrappers = document.querySelectorAll('.cup-wrapper');
+            cupWrappers.forEach((w, i) => {
+                w.classList.remove('revealed', 'disabled');
+                w.dataset.index = i;
+            });
+
+            // Restore previous input values
+            document.getElementById('place1').value = previousPlace1;
+            document.getElementById('place2').value = previousPlace2;
+            document.getElementById('place3').value = previousPlace3;
+        }
+
+        function showConfetti() {
+            const confettiContainer = document.getElementById('confettiContainer');
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff1493', '#7fff00', '#ff6347'];
+            
+            // Clear any existing confetti
+            confettiContainer.innerHTML = '';
+            
+            // Create 50 confetti pieces
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confettiContainer.appendChild(confetti);
+            }
+            
+            // Clean up after animation
+            setTimeout(() => {
+                confettiContainer.innerHTML = '';
+            }, 4000);
+        }
+
+        // Utility functions
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+    </script>
+</body>
+</html>
