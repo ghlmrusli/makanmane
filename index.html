@@ -809,7 +809,7 @@
             cupWrappers.forEach(w => w.classList.remove('disabled'));
             isShuffling = false;
             statusText.classList.remove('shuffling-dots');
-            statusText.textContent = 'Pilih satu!';
+            statusText.textContent = 'Pilih satu cup!';
             
             // Enable buttons after shuffle
             shuffleAgainBtn.disabled = false;
@@ -878,7 +878,7 @@
             clickedWrapper.classList.add('revealed');
             
             setTimeout(() => {
-                statusText.textContent = `Ayuh ke ${selectedPlace}!`;
+                statusText.textContent = `Ayuh kita makan ${selectedPlace}!`;
                 shuffleAgainBtn.style.display = 'inline-block';
                 resetBtn.style.display = 'inline-block';
                 shuffleAgainBtn.disabled = false;
