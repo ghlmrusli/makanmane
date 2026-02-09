@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>😋 Makan mana?</title>
+    <title>Makan mane?</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😋</text></svg>">
     <style>
         * {
             margin: 0;
@@ -41,7 +42,7 @@
             padding: 0;
             width: 300px;
             max-width: calc(100vw - 40px);
-            height: 400px;
+            height: 380px;
             box-shadow: 
                 inset -1px -1px 0 0 #000000,
                 inset 1px 1px 0 0 #dfdfdf,
@@ -178,7 +179,7 @@
         }
 
         .btn {
-            padding: 3px 12px;
+            padding: 0;
             min-width: 75px;
             height: 30px;
             font-size: 14px;
@@ -187,7 +188,9 @@
             border: none;
             border-radius: 0;
             cursor: pointer;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin: 0 auto;
             width: 100%;
             background: #d4d0c8;
@@ -198,9 +201,8 @@
                 inset -2px -2px 0 0 #808080,
                 inset 2px 2px 0 0 #dfdfdf;
             position: relative;
-            text-align: center;
-            line-height: 24px;
             flex-shrink: 0;
+            transition: transform 0.15s ease;
         }
 
         .btn-primary {
@@ -216,6 +218,7 @@
 
         .btn-primary:hover:not(:disabled) {
             background: #d4d0c8;
+            transform: scale(1.02);
         }
 
         .btn-primary:active:not(:disabled) {
@@ -224,7 +227,7 @@
                 inset -1px -1px 0 0 #ffffff,
                 inset 2px 2px 0 0 #808080,
                 inset -2px -2px 0 0 #dfdfdf;
-            padding: 4px 11px 2px 13px;
+            transform: scale(0.98);
         }
 
         .btn:disabled {
@@ -313,37 +316,54 @@
         }
 
         /* Confetti Animation */
-        .confetti-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            will-change: transform, opacity;
-            animation: confetti-fall 2.5s ease-out forwards;
-        }
-
-        @keyframes confetti-fall {
+        @keyframes confetti-slow {
             0% {
-                transform: translate3d(0, 0, 0) rotateZ(0deg);
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
+                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
             }
             100% {
-                transform: translate3d(0, 350px, 0) rotateZ(720deg);
-                opacity: 0;
+                transform: translate3d(25px, 105vh, 0) rotateX(360deg) rotateY(180deg);
             }
+        }
+        @keyframes confetti-medium {
+            0% {
+                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
+            }
+            100% {
+                transform: translate3d(100px, 105vh, 0) rotateX(100deg) rotateY(360deg);
+            }
+        }
+        @keyframes confetti-fast {
+            0% {
+                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
+            }
+            100% {
+                transform: translate3d(-50px, 105vh, 0) rotateX(10deg) rotateY(250deg);
+            }
+        }
+        .confetti-container {
+            perspective: 700px;
+            position: absolute;
+            overflow: hidden;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        .confetti {
+            position: absolute;
+            z-index: 1;
+            top: -10px;
+            border-radius: 0;
+        }
+        .confetti--animation-slow {
+            animation: confetti-slow 2.25s linear 1 forwards;
+        }
+        .confetti--animation-medium {
+            animation: confetti-medium 1.75s linear 1 forwards;
+        }
+        .confetti--animation-fast {
+            animation: confetti-fast 1.25s linear 1 forwards;
         }
 
         .status {
@@ -353,6 +373,26 @@
             font-weight: 600;
             color: #000;
             min-height: 16px;
+        }
+
+        .shuffling-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '';
+            }
+            40% {
+                content: '.';
+            }
+            60% {
+                content: '..';
+            }
+            80%, 100% {
+                content: '...';
+            }
         }
 
         .reveal-message {
@@ -435,8 +475,14 @@
                 inset 1px 1px 0 0 #ffffff,
                 inset -2px -2px 0 0 #808080,
                 inset 2px 2px 0 0 #dfdfdf;
-            text-align: center;
-            line-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
         }
 
         .modal-btn:active {
@@ -445,7 +491,7 @@
                 inset -1px -1px 0 0 #ffffff,
                 inset 2px 2px 0 0 #808080,
                 inset -2px -2px 0 0 #dfdfdf;
-            padding: 1px 0 0 2px;
+            transform: scale(0.98);
         }
 
         /* Static cups display on input screen */
@@ -487,7 +533,7 @@
 <body>
     <div class="container">
         <div class="title-bar">
-            <div class="title-bar-left">Makan mana?</div>
+            <div class="title-bar-left">😋 Makan mane?</div>
             <button class="close-btn" id="closeBtn">✕</button>
         </div>
         <div class="window-content">
@@ -619,7 +665,7 @@
     <!-- Modal Popup -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-dialog">
-            <div class="modal-title-bar">Makan mana?</div>
+            <div class="modal-title-bar">Makan mane?</div>
             <div class="modal-content">Betul taknak makan?</div>
             <div class="modal-buttons">
                 <button class="modal-btn" id="cancelBtn">Tak betul</button>
@@ -722,7 +768,8 @@
             if (isShuffling || isRevealed) return;
 
             isShuffling = true;
-            statusText.textContent = 'Shuffling...';
+            statusText.textContent = 'Shuffling';
+            statusText.classList.add('shuffling-dots');
             revealMessage.textContent = '';
             
             // Disable buttons during shuffle
@@ -750,6 +797,7 @@
 
             cupWrappers.forEach(w => w.classList.remove('disabled'));
             isShuffling = false;
+            statusText.classList.remove('shuffling-dots');
             statusText.textContent = 'Pilih satu!';
             
             // Enable buttons after shuffle
@@ -835,6 +883,7 @@
             // Keep buttons visible but disabled
             shuffleAgainBtn.disabled = true;
             resetBtn.disabled = true;
+            statusText.classList.remove('shuffling-dots');
             statusText.textContent = '';
             
             // Reset all cups
@@ -872,6 +921,7 @@
             resetBtn.style.display = 'none';
             shuffleAgainBtn.style.display = 'none';
             revealMessage.textContent = '';
+            statusText.classList.remove('shuffling-dots');
             statusText.textContent = '';
 
             // Reset 2D cups
@@ -890,31 +940,28 @@
         function showConfetti() {
             const confettiContainer = document.getElementById('confettiContainer');
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff1493'];
+            const animations = ['confetti--animation-slow', 'confetti--animation-medium', 'confetti--animation-fast'];
             
             // Clear any existing confetti
             confettiContainer.innerHTML = '';
             
-            // Create 25 confetti pieces (reduced from 50 for better performance)
-            for (let i = 0; i < 25; i++) {
+            // Create 50 confetti pieces
+            for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
-                confetti.className = 'confetti';
+                const animationClass = animations[Math.floor(Math.random() * animations.length)];
+                confetti.className = `confetti ${animationClass}`;
                 confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.width = (Math.random() * 8 + 8) + 'px';
+                confetti.style.height = (Math.random() * 8 + 8) + 'px';
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.animationDelay = Math.random() * 0.3 + 's';
-                confetti.style.transition = 'opacity 0.3s ease-out';
                 confettiContainer.appendChild(confetti);
             }
-            
-            // Fade out before cleanup for smoother removal
-            setTimeout(() => {
-                const allConfetti = confettiContainer.querySelectorAll('.confetti');
-                allConfetti.forEach(c => c.style.opacity = '0');
-            }, 2400);
             
             // Clean up after animation
             setTimeout(() => {
                 confettiContainer.innerHTML = '';
-            }, 2800);
+            }, 3000);
         }
 
         // Utility functions
